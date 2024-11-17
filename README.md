@@ -115,3 +115,60 @@ spec:
 
 ![Image alt](https://github.com/mezhibo/kubernetes5/blob/c5e088a7c8fe5c8cc390368aa65107764da93cf0/img/3.jpg)
 
+
+
+
+**Задание 2. Создать Ingress и обеспечить доступ к приложениям снаружи кластера**
+
+1. Включить Ingress-controller в MicroK8S.
+
+2. Создать Ingress, обеспечивающий доступ снаружи по IP-адресу кластера MicroK8S так, чтобы при запросе только по адресу открывался frontend а при добавлении /api - backend.
+
+3. Продемонстрировать доступ с помощью браузера или curl с локального компьютера.
+
+4. Предоставить манифесты и скриншоты или вывод команды п.2.
+
+
+
+**Решение 2**
+
+
+Активируем и запустим 
+
+![Image alt](https://github.com/mezhibo/kubernetes5/blob/cdb20114dcaa955df6990132ee55665bf9429227/img/4.jpg)
+
+
+Далее создадим необходимый ingress
+
+```
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: test.ru
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: frontend-svc
+            port:
+              number: 80
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: backend-svc
+            port:
+              number: 80
+```
+
+Теперь зайдем через брайзер и увидим что наш nginx работает
+
+![Image alt](https://github.com/mezhibo/kubernetes5/blob/cdb20114dcaa955df6990132ee55665bf9429227/img/5.jpg)
+
